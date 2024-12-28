@@ -1,0 +1,45 @@
+Main:
+    # Desktop Environment
+    - i3
+    - xscreensaver
+    - flameshot
+
+    # Programming
+    - vscodium
+    - gcc-doc
+    - g++
+
+    # Terminal
+    - lxterminal
+    - vim
+    - ssh
+    - man
+
+    # Browsers
+    - firefox-esr
+    - chromium
+    - quiterss
+
+    # Audio
+    - qpwgraph
+
+    # Messaging
+    - signal
+
+    # Other
+    - obs-signal
+    - wine
+	- flatpak
+
+Laptop:
+    - xbacklight
+    - cbatticon
+    - acpitool
+    - tlp
+    - nmapplet
+    - x11-xkb-utils
+
+Games:
+    - steam
+    - minecraft
+    - srb2k
