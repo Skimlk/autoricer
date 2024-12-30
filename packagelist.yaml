@@ -3,6 +3,7 @@ Main:
     - i3
     - xscreensaver
     - flameshot
+    - nautilus
 
     # Programming
     - vscodium
@@ -29,7 +30,8 @@ Main:
     # Other
     - obs-signal
     - wine
-	- flatpak
+    - flatpak
+    - blueman
 
 Laptop:
     - xbacklight

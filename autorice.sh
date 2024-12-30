@@ -5,4 +5,5 @@ if [ "$EUID" -ne 0 ]
   exit 1
 fi
 
-
+chmod +x *.sh
+./install.sh
