@@ -21,8 +21,13 @@ install_signal() {
 
 #Application Configurations
 configure_i3() {
+	install xorg xbindkeys xwallpaper #Setup Wallpaper
 	cp $dotfiles/i3/config ~/.config/i3/
 	cp $dotfiles/i3/i3status.conf /etc/
+	cp $dotfiles/.xbindkeysrc ~/
+}
+configure_vim() {
+	cp $dotfiles/.vimrc ~/
 }
 configure_obs() {
     #Virtual Camera
@@ -33,4 +38,4 @@ configure_lxterminal() {
 }
 
 #Other Configurations
-
+cp $dotfiles/.bashrc ~/

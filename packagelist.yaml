@@ -28,7 +28,7 @@ Main:
     - signal
 
     # Other
-    - obs-signal
+    - obs-studio
     - wine
     - flatpak
     - blueman

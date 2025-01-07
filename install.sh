@@ -7,7 +7,7 @@ package_list="packagelist.yaml"
 #Distro-specific Functions
 update() { 
 	apt-get update && 
-    apt-get upgrade
+	apt-get upgrade
 }
 install() {
 	apt-get -y install $@ 
