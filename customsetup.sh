@@ -15,9 +15,23 @@ install_signal() {
 
     # 3. Update your package database and install Signal:   
     update
-    install signal
+    install signal-desktop
 
     rm signal-desktop-keyring.gpg
+}
+install_steam() {
+	wget https://cdn.fastly.steamstatic.com/client/installer/steam.deb
+	dpkg --skip-same-version -i steam.deb
+	rm steam.deb
+	gawk -i inplace '
+	/# Don'\''t allow running as root/ { 
+		found = 1 
+	} 
+	found && /exit 1/ { 
+		sub(/^exit 1/, "# &"); 
+		found = 0 
+	} 
+	{ print }' /bin/steam
 }
 
 #Application Configurations
@@ -35,7 +49,10 @@ configure_obs() {
     install v4l2loopback-dkms
 }
 configure_lxterminal() {
-	install fortune-mod fortune-debian-hints cowsay
+	install fortunes fortune-mod fortunes-debian-hints cowsay
+	cp $dotfiles/lxterminal.conf $USER_HOME/.config/lxterminal/
+	wget -P $USER_HOME/.local/share/fonts/ -o ComicCode-Regular.otf https://files.catbox.moe/e8621s.otf
+	fc-cache
 }
 
 #Other Configurations
