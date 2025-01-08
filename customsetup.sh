@@ -1,6 +1,7 @@
 #!/bin/bash
 git clone https://github.com/Skimlk/dotfiles
 dotfiles="$(basename $_)" 
+USER_HOME=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
 
 #Application Installations
 install_signal() {
@@ -22,12 +23,12 @@ install_signal() {
 #Application Configurations
 configure_i3() {
 	install xorg xbindkeys xwallpaper #Setup Wallpaper
-	cp $dotfiles/i3/config ~/.config/i3/
+	cp $dotfiles/i3/config $USER_HOME/.config/i3/
 	cp $dotfiles/i3/i3status.conf /etc/
-	cp $dotfiles/.xbindkeysrc ~/
+	cp $dotfiles/.xbindkeysrc $USER_HOME/
 }
 configure_vim() {
-	cp $dotfiles/.vimrc ~/
+	cp $dotfiles/.vimrc $USER_HOME/
 }
 configure_obs() {
     #Virtual Camera
@@ -38,4 +39,4 @@ configure_lxterminal() {
 }
 
 #Other Configurations
-cp $dotfiles/.bashrc ~/
+cp $dotfiles/.bashrc $USER_HOME/

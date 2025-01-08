@@ -1,7 +1,4 @@
 #!/bin/bash
-
-#Paths
-source customsetup.sh
 package_list="packagelist.yaml"
 
 #Distro-specific Functions
@@ -52,6 +49,7 @@ do
 done
 
 #Configure and Install Packages
+source customsetup.sh
 for package in ${selected_packages[@]}; do
 	#Install Package
 	if declare -f install_$package > /dev/null; then
