@@ -6,7 +6,7 @@ Main:
     - nautilus
 
     # Programming
-    - vscodium
+    - codium
     - gcc-doc
     - g++
 

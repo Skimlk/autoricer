@@ -20,6 +20,7 @@ install_signal() {
     rm signal-desktop-keyring.gpg
 }
 install_steam() {
+	install gawk
 	wget https://cdn.fastly.steamstatic.com/client/installer/steam.deb
 	dpkg --skip-same-version -i steam.deb
 	rm steam.deb
@@ -33,6 +34,15 @@ install_steam() {
 	} 
 	{ print }' /bin/steam
 }
+install_minecraft() {
+	wget https://launcher.mojang.com/download/Minecraft.deb
+	dpkg --skip-same-version -i Minecraft.deb
+	rm Minecraft.deb
+}
+install_srb2k() {
+	install flatpak
+	flatpak install flathub org.srb2.SRB2Kart
+}
 
 #Application Configurations
 configure_i3() {
@@ -40,6 +50,8 @@ configure_i3() {
 	cp $dotfiles/i3/config $USER_HOME/.config/i3/
 	cp $dotfiles/i3/i3status.conf /etc/
 	cp $dotfiles/.xbindkeysrc $USER_HOME/
+	mkdir -p $USER_HOME/Pictures/wallpapers
+	wget https://files.catbox.moe/4qepc1.png -O $USER_HOME/Pictures/wallpapers/forest.png
 }
 configure_vim() {
 	cp $dotfiles/.vimrc $USER_HOME/
@@ -51,7 +63,8 @@ configure_obs() {
 configure_lxterminal() {
 	install fortunes fortune-mod fortunes-debian-hints cowsay
 	cp $dotfiles/lxterminal.conf $USER_HOME/.config/lxterminal/
-	wget -P $USER_HOME/.local/share/fonts/ -o ComicCode-Regular.otf https://files.catbox.moe/e8621s.otf
+	mkdir -p $USER_HOME/.local/share/fonts/
+	wget https://files.catbox.moe/p60y2w.otf -O $USER_HOME/.local/share/fonts/ComicCode-Regular.otf
 	fc-cache
 }
 

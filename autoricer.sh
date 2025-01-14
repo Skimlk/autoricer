@@ -10,7 +10,7 @@ install() {
 	apt-get -y install $@ 
 }
 description() {
-	desc=$(apt-cache show $1 | grep -m 1 -E "^Description" | cut -d ' ' -f 2-)
+	desc=$(apt-cache show $1 2>/dev/null | grep -m 1 -E "^Description" | cut -d ' ' -f 2-)
 	if [ -z "$desc" ]; then
 		echo "No description available"
 	else
@@ -19,8 +19,8 @@ description() {
 }
 
 #Script Start
-if [ "$EUID" -ne 0 ]
-  then echo "Please run as root."
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run as root."
   exit 1
 fi
 
@@ -34,7 +34,7 @@ selected_packages=()
 for group in $(yq -r 'keys | reverse | .[]' $package_list)
 do
 	if whiptail \
-		--title "Install $group Packages?" \
+		--title "Install Packages" \
 		--yesno "Would you like to install $group packages?" 8 78; 
 	then	
 		options=()
@@ -42,8 +42,8 @@ do
 			options+=("$package" "$(description $package)" "ON")
 		done
 
-		selected_packages+=( $(whiptail --title "$group Packages" --checklist \
-			"Select which packages you would like to install" 20 76 4 \
+		selected_packages+=( $(whiptail --title "Install $group Packages" --checklist \
+			"Select which packages you would like to install" 20 100 15 \
 			"${options[@]}" 3>&1 1>&2 2>&3 | tr -d '"') )
 	fi
 done
