@@ -3,11 +3,14 @@ package_list="packagelist.yaml"
 
 #Distro-specific Functions
 update() { 
-	apt-get update && 
+	apt-get update 
 	apt-get upgrade
 }
 install() {
 	apt-get -y install $@ 
+}
+search() {
+	apt-cache search $1
 }
 description() {
 	desc=$(apt-cache show $1 2>/dev/null | grep -m 1 -E "^Description" | cut -d ' ' -f 2-)
@@ -20,8 +23,8 @@ description() {
 
 #Script Start
 if [ "$EUID" -ne 0 ]; then
-  echo "Please run as root."
-  exit 1
+	echo "Please run as root."
+	exit 1
 fi
 
 update
@@ -48,15 +51,17 @@ do
 	fi
 done
 
+selected_packages=$(echo $selected_packages | xargs -n1 | sort | xargs)
+
 #Configure and Install Packages
 source customsetup.sh
 for package in ${selected_packages[@]}; do
 	#Install Package
 	if declare -f install_$package > /dev/null; then
 		install_$package
-	else
+	elif [ -n "$(search $package)" ]; then
 		install $package
-	fi	
+	fi
 
 	#Configure Package
 	if declare -f configure_$package > /dev/null; then

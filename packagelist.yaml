@@ -17,7 +17,7 @@ Main:
     - man
 
     # Browsers
-    - firefox-esr
+    - librewolf
     - chromium
     - quiterss
 
@@ -40,6 +40,7 @@ Laptop:
     - tlp
     - nmapplet
     - x11-xkb-utils
+    - i3laptop
 
 Games:
     - steam
