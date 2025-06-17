@@ -1,18 +1,16 @@
 #!/bin/bash
+
 package_list="packagelist.yaml"
 
 #Distro-specific Functions
-update() { 
-	apt-get update 
+distro_update() { 
+	apt-get update && 
 	apt-get upgrade
 }
-install() {
-	apt-get -y install $@ 
+distro_install() {
+	apt-get -y install $@
 }
-search() {
-	apt-cache search $1
-}
-description() {
+distro_description() {
 	desc=$(apt-cache show $1 2>/dev/null | grep -m 1 -E "^Description" | cut -d ' ' -f 2-)
 	if [ -z "$desc" ]; then
 		echo "No description available"
@@ -21,53 +19,67 @@ description() {
 	fi
 }
 
-#Script Start
+install() {
+	for package in "$@"; do
+		echo "Installing '$package'"
+		if declare -f install_$package > /dev/null; then
+			install_$package
+		else
+			distro_install $package 
+		fi
+	done
+}
+configure() {
+	echo "Configuring '$1'"
+	if declare -f configure_$1 > /dev/null; then
+		echo "Configuring '$1'"
+		configure_$1
+	fi
+}
+setup() {
+	for package in "$@"; do
+		echo "Setting up '$package'"
+		install $package
+		configure $package
+	done
+}
+
+rice() {
+	#Install Dependencies
+	install whiptail yq
+
+	#Install Packages
+	selected_packages=()
+	for group in $(yq -r 'keys | reverse | .[]' $package_list); do
+		if whiptail \
+			--title "Install Packages" \
+			--yesno "Would you like to install $group packages?" 8 78; 
+		then	
+			options=()
+			for package in $(yq -r ".$group | .[]" $package_list); do
+				options+=("$package" "$(distro_description $package)" "ON")
+			done
+
+			selected_packages+=( $(whiptail --title "Install $group Packages" --checklist \
+				"Select which packages you would like to install" 20 100 15 \
+				"${options[@]}" 3>&1 1>&2 2>&3 | tr -d '"') )
+		fi
+	done
+
+	setup ${selected_packages[@]}
+}
+
 if [ "$EUID" -ne 0 ]; then
 	echo "Please run as root."
 	exit 1
 fi
 
-update
-
-#Install Dependencies
-install whiptail yq
-
-#Install Packages
-selected_packages=()
-for group in $(yq -r 'keys | reverse | .[]' $package_list)
-do
-	if whiptail \
-		--title "Install Packages" \
-		--yesno "Would you like to install $group packages?" 8 78; 
-	then	
-		options=()
-		for package in $(yq -r ".$group | .[]" $package_list); do
-			options+=("$package" "$(description $package)" "ON")
-		done
-
-		selected_packages+=( $(whiptail --title "Install $group Packages" --checklist \
-			"Select which packages you would like to install" 20 100 15 \
-			"${options[@]}" 3>&1 1>&2 2>&3 | tr -d '"') )
-	fi
-done
-
-selected_packages=$(echo $selected_packages | xargs -n1 | sort | xargs)
-
-#Configure and Install Packages
 source customsetup.sh
-for package in ${selected_packages[@]}; do
-	#Install Package
-	if declare -f install_$package > /dev/null; then
-		install_$package
-	elif [ -n "$(search $package)" ]; then
-		install $package
-	fi
 
-	#Configure Package
-	if declare -f configure_$package > /dev/null; then
-   		echo "Configuring '$package'"
-		configure_$package
-	fi
-done
+if [ "$1" = "install" ]; then
+	setup ${@:2}
+else
+	rice
+fi
 
 exit 0

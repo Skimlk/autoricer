@@ -38,9 +38,8 @@ Laptop:
     - cbatticon
     - acpitool
     - tlp
-    - nmapplet
+    - nm-tray
     - x11-xkb-utils
-    - i3laptop
 
 Games:
     - steam
