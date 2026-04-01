@@ -1,17 +1,11 @@
 #!/bin/bash
 
+source /etc/os-release
+source "./distro-specific-functions/$ID.sh"
 package_list="packagelist.yaml"
 
-#Distro-specific Functions
-distro_update() { 
-	apt-get update && 
-	apt-get upgrade
-}
-distro_install() {
-	apt-get -y install $@
-}
-distro_description() {
-	desc=$(apt-cache show $1 2>/dev/null | grep -m 1 -E "^Description" | cut -d ' ' -f 2-)
+description() {
+	desc=$(distro_description)
 	if [ -z "$desc" ]; then
 		echo "No description available"
 	else
@@ -29,6 +23,7 @@ install() {
 		fi
 	done
 }
+
 configure() {
 	echo "Configuring '$1'"
 	if declare -f configure_$1 > /dev/null; then
@@ -36,6 +31,7 @@ configure() {
 		configure_$1
 	fi
 }
+
 setup() {
 	for package in "$@"; do
 		echo "Setting up '$package'"
@@ -57,7 +53,7 @@ rice() {
 		then	
 			options=()
 			for package in $(yq -r ".$group | .[]" $package_list); do
-				options+=("$package" "$(distro_description $package)" "ON")
+				options+=("$package" "$(description $package)" "ON")
 			done
 
 			selected_packages+=( $(whiptail --title "Install $group Packages" --checklist \
