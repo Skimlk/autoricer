@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source /etc/os-release
-source "./distro-specific-functions/$ID.sh"
+source ./distro-specific-functions/*$ID*.sh
 package_list="packagelist.yaml"
 
 description() {
