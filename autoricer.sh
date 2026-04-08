@@ -5,7 +5,7 @@ source ./distro-specific-functions/*$ID*.sh
 package_list="packagelist.yaml"
 
 description() {
-	desc=$(distro_description)
+	desc=$(distro_description $1)
 	if [ -z "$desc" ]; then
 		echo "No description available"
 	else
