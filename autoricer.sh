@@ -25,7 +25,6 @@ install() {
 }
 
 configure() {
-	echo "Configuring '$1'"
 	if declare -f configure_$1 > /dev/null; then
 		echo "Configuring '$1'"
 		configure_$1
