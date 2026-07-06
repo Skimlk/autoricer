@@ -19,7 +19,7 @@ install() {
 		if declare -f install_$package > /dev/null; then
 			install_$package
 		else
-			distro_install $package 
+			distro_install $package 2> /dev/null
 		fi
 	done
 }
